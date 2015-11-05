@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-@interface ViewController ()
+@interface ViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
 @property (nonatomic ,strong)CLLocationManager *manager;
@@ -40,10 +40,41 @@
     //3、设置地图的类型
     self.mapView.mapType = MKMapTypeStandard;
     
-    
-    
+    //4、 遵守协议
+    self.mapView.delegate = self;
 }
 
+#pragma mark: 实现 MKMapViewDelegate 
+/**
+ *  更新到当前用户的位置就会调用
+ *
+ *  @param mapView      mapView
+ *  @param userLocation 用户位置
+ */
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    //1、 MKUserLocation  遵守大头针的协议 决定了蓝色大头针视图显示的内容
+    
+    userLocation.title = @"北京";
+    userLocation.subtitle = @"首都啊 ";
+    
+    /*
+     中国中心点的纬度是（3 + 53）/ 2 = 北纬28度
+     中国中心点的经度是（73 + 135）/ 2 = 东经104度
+     中国纬度跨度是53 - 3 = 50度
+     中国经度跨度是135 - 73 = 62度
+     */
+    
+    //1、计算跨度
+    MKCoordinateSpan span = MKCoordinateSpanMake(50,62);
+    
+    //2、 设置 中心点的经纬度
+   CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(28,104);
+    //3、表示 一块区域  ，以coordinate 为中心， span 为跨度
+    MKCoordinateRegion regoin = MKCoordinateRegionMake(coordinate, span);
+  [self.mapView setRegion:regoin animated:YES];
+    
+    //结果是显示 一个 中国的地图
+}
 
 
 @end

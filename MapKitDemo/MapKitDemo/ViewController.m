@@ -64,6 +64,7 @@
      中国经度跨度是135 - 73 = 62度
      */
     
+    /*
     //1、计算跨度
     MKCoordinateSpan span = MKCoordinateSpanMake(50,62);
     
@@ -74,7 +75,44 @@
   [self.mapView setRegion:regoin animated:YES];
     
     //结果是显示 一个 中国的地图
+     */
 }
 
+#pragma mark 改变跨度显示
+- (IBAction)changeSpan:(id)sender {
+    
+    //1、设置跨度
+    MKCoordinateSpan span = MKCoordinateSpanMake(10, 60);
+    
+    //2、设置跨度的区域 ，以当前位置为中心点
+    
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(28,104);
+    MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
+    
+    [self.mapView setRegion:region animated:YES];
+}
+
+/**
+ *  区域发生改变的时候就会调用
+ *   应用场景:  加载当前屏幕范围内最新的数据
+ */
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    NSLog(@"regionDidChangeAnimated");
+    NSLog(@"%f   %f ",self.mapView.region.span.latitudeDelta,self.mapView.region.span.longitudeDelta);
+}
+
+/**
+ *点击位置大头针的时间调用
+ */
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
+    NSLog(@"%s",__func__);
+}
+/**
+ * 地图下载完毕调用
+ */
+
+-(void)mapViewDidFinishLoadingMap:(MKMapView *)mapView{
+     NSLog(@"%s",__func__);
+}
 
 @end
